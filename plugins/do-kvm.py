@@ -311,6 +311,7 @@ def set_simx_log():
     with open('/opt/simx/cfg/simx-qemu.cfg', 'a+') as f:
          f.write('[logger]\n')
          f.write('log_file_redirection = /logs/simx-qemu.log\n')
+
 def set_sriov_vfs(args, idx, mode):
     qemu_args["-device"].append('pcie-root-port,pref64-reserve=500M,slot=%d,id=pcie_port.%d' %(idx-1, idx))
     # TODO: Configure SRIOV for more than one card
@@ -453,6 +454,11 @@ def setup_from_pickle(args, pickle_params):
     write_once("/etc/group", "{group}:x:{gid}:\n".format(**p))
     write_once("/etc/sudoers", "{user} ALL=(ALL) NOPASSWD:ALL\n".format(**p))
 
+    pickle_path = "/etc/mkt_settings.pickle"
+    subprocess.check_output(["touch", pickle_path])
+    with open(pickle_path, "wb") as F:
+        pickle.dump(p, F)
+
     setup_console(p["user"])
 
     args.kernel = p.get("kernel", None)
@@ -545,4 +551,6 @@ if args.boot_script:
 
 with open('/logs/qemu.cmdline', 'w+') as f:
     f.write(" ".join(cmd))
+
+
 os.execvp(cmd[0], cmd)
