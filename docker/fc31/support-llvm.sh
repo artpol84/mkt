@@ -14,6 +14,11 @@ License:	Apache-2.0
 From ClangBuiltLinux/tc-build.git
 
 %install
+cat /opt/src/build-llvm.py | sed -e 's/git:\/\/github/https:\/\/github/' | less > /opt/src/build-llvm.py.new
+mv /opt/src/build-llvm.py /opt/src/build-llvm.py.old
+ln -s /opt/src/build-llvm.py.new /opt/src/build-llvm.py
+chmod +x /opt/src/build-llvm.py
+cat /opt/src/build-llvm.py | grep github
 ./build-llvm.py --pgo -t X86 --build-stage1-only --install-stage1-only -I %{buildroot}/opt/llvm
 rm -rf %{buildroot}/opt/llvm/share \
 	%{buildroot}/opt/llvm/lib/*.a* \
