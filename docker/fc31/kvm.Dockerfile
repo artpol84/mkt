@@ -2,6 +2,7 @@ FROM fedora:31 as rpms
 
 COPY --from=local_mkt/support_rdma_core:fc31 /root/rpmbuild/RPMS/x86_64/*.rpm /opt/rpms/
 COPY --from=local_mkt/support_simx:fc31 /root/rpmbuild/RPMS/x86_64/*.rpm /opt/rpms/
+COPY --from=local_mkt/support_qemu:fc31 /root/rpmbuild/RPMS/x86_64/*.rpm /opt/rpms/
 
 RUN rm -f \
    /opt/rpms/*debug*.rpm \
