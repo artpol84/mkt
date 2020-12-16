@@ -226,13 +226,15 @@ int recv_loop(ib_context_t *ctx, int cnt)
     int ne, i;
 
 #define MAX_MSG_SIZE 0x100
+    size_t msg_size = MAX_MSG_SIZE * cnt;
+    char *ptr = calloc(msg_size, 1);
+    struct ibv_mr *mr = NULL;
+    mr = ibv_reg_mr(ctx->pd, ptr, msg_size, 0);
 
     for (i = 0; i < cnt; i++) {
-        list.addr   = (uint64_t)(ctx->mr_buffer + MAX_MSG_SIZE*i);
+        list.addr   = (uint64_t)(ptr + MAX_MSG_SIZE*i);
         list.length = MAX_MSG_SIZE;
-        list.lkey   = ctx->mr->lkey;
-
-
+        list.lkey   = mr->lkey;
         wr.wr_id      = i;
         wr.sg_list    = &list;
         wr.num_sge    = 1;
