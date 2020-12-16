@@ -118,7 +118,7 @@ int parse_gid(char *gid_str, union ibv_gid *gid) {
 
 struct ibv_ah *get_ah(ib_context_t *ctx)
 {
-    struct ibv_ah_attr ah_attr;
+    struct ibv_ah_attr ah_attr = { 0 };
     ah_attr.is_global  = 0;
     ah_attr.sl = 0;
     ah_attr.dlid = ctx->s->dlid;
