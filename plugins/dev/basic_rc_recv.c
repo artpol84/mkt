@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
 
     parse_args(argc, argv, s, 0);
     init_ctx(ctx, s);
+    init_tcp_recv(ctx);
 
     while (1) {
         init_rc_recv(ctx);
