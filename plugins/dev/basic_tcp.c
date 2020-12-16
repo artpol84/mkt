@@ -115,11 +115,10 @@ int exch_tcp_send(ib_context_t *ctx)
 
 int init_tcp_recv(ib_context_t *ctx)
 {
-    int listener;
     struct sockaddr_in addr;
 
-    listener = socket(AF_INET, SOCK_STREAM, 0);
-    if(listener < 0)
+    ctx->tcp_state.listener = socket(AF_INET, SOCK_STREAM, 0);
+    if(ctx->tcp_state.listener  < 0)
     {
         perror("socket");
         exit(1);
@@ -128,7 +127,7 @@ int init_tcp_recv(ib_context_t *ctx)
     addr.sin_family = AF_INET;
     addr.sin_port = htons(ctx->s->tcp_port);
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    if(bind(listener, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+    if(bind(ctx->tcp_state.listener, (struct sockaddr *)&addr, sizeof(addr)) < 0)
     {
         perror("bind");
         exit(2);
