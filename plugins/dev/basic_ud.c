@@ -62,7 +62,6 @@ int init_ud_recv(ib_context_t *ctx)
     int ret;
 #define MAX_NUM_RECVS 0x10
     ret = _ud_qp_to_rtr(ctx, 0, MAX_NUM_RECVS);
-    init_tcp_recv(ctx);
     return ret;
 }
 
