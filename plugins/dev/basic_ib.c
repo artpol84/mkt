@@ -174,7 +174,8 @@ int init_ctx(ib_context_t *ctx, settings_t *s)
         goto close_device;
     }
 
-    ctx->mr = ibv_reg_mr(ctx->pd, ctx->mr_buffer, REGION_SIZE, 0);
+    ctx->mr = ibv_reg_mr(ctx->pd, ctx->mr_buffer, REGION_SIZE,
+                         IBV_ACCESS_LOCAL_WRITE);
     if (!ctx->mr) {
         fprintf(stderr, "Couldn't register MR\n");
         goto close_pd;
