@@ -17,6 +17,7 @@
 #include <infiniband/verbs.h>
 
 #include "basic_ib.h"
+#include "basic_tcp.h"
 #include "basic_ud.h"
 
 int main(int argc, char *argv[])
@@ -33,6 +34,8 @@ int main(int argc, char *argv[])
         fprintf(stderr, "init_ud_send() failed\n");
         goto exit;
     }
+
+    exch_tcp_send(ctx);
 
 #define TEXT_MSG "Hello UD :)"
     sprintf(ctx->mr_buffer, TEXT_MSG);
