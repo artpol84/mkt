@@ -49,6 +49,8 @@ static int _ud_qp_to_rtr(ib_context_t *ctx,
         goto free_qp;
     }
 
+    ctx->s->lqpn = ctx->qp->qp_num;
+
     return 0;
 free_qp:
     ibv_destroy_qp(ctx->qp);
