@@ -84,7 +84,7 @@ int init_ud_send(ib_context_t *ctx)
         goto free_qp;
     }
     exchange_send(ctx);
-
+    return 0;
 free_qp:
     ibv_destroy_qp(ctx->qp);
     return -1;

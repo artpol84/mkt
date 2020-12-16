@@ -25,8 +25,14 @@ int main(int argc, char *argv[])
     ib_context_t ib_ctx, *ctx = &ib_ctx;
 
     parse_args(argc, argv, s, 1);
-    init_ctx(ctx, s);
-    init_ud_send(ctx);
+    if (init_ctx(ctx, s)){
+        fprintf(stderr, "init_ctx() failed\n");
+        goto exit;
+    }
+    if (init_ud_send(ctx)) {
+        fprintf(stderr, "init_ud_send() failed\n");
+        goto exit;
+    }
 
 #define TEXT_MSG "Hello UD :)"
     sprintf(ctx->mr_buffer, TEXT_MSG);
