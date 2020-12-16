@@ -28,7 +28,9 @@ int main(int argc, char *argv[]) {
     init_ctx(ctx, s);
     init_ud_recv(ctx);
 
-    recv_loop(ctx);
+    while(1) {
+        recv_loop(ctx, 4);
+    }
 
     free_ctx(ctx);
     return 0;

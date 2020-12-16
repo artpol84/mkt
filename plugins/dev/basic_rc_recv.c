@@ -25,10 +25,11 @@ int main(int argc, char *argv[]) {
 
     parse_args(argc, argv, s, 0);
     init_ctx(ctx, s);
-    init_rc_recv(ctx);
 
-    recv_loop(ctx);
-
+    while (1) {
+        init_rc_recv(ctx);
+        recv_loop(ctx, 1);
+    }
     free_ctx(ctx);
     return 0;
 }

@@ -217,7 +217,7 @@ void free_ctx(ib_context_t *ctx)
     ibv_close_device(ctx->ctx);
 }
 
-int recv_loop(ib_context_t *ctx)
+int recv_loop(ib_context_t *ctx, int cnt)
 {
     struct ibv_recv_wr wr;
     struct ibv_recv_wr *bad_wr;
@@ -227,44 +227,40 @@ int recv_loop(ib_context_t *ctx)
 
 #define MAX_MSG_SIZE 0x100
 
-    while( 1 ) {
-        for (i = 0; i < 4; i++) {
-            list.addr   = (uint64_t)(ctx->mr_buffer + MAX_MSG_SIZE*i);
-            list.length = MAX_MSG_SIZE;
-            list.lkey   = ctx->mr->lkey;
+    for (i = 0; i < cnt; i++) {
+        list.addr   = (uint64_t)(ctx->mr_buffer + MAX_MSG_SIZE*i);
+        list.length = MAX_MSG_SIZE;
+        list.lkey   = ctx->mr->lkey;
 
 
-            wr.wr_id      = i;
-            wr.sg_list    = &list;
-            wr.num_sge    = 1;
-            wr.next       = NULL;
+        wr.wr_id      = i;
+        wr.sg_list    = &list;
+        wr.num_sge    = 1;
+        wr.next       = NULL;
 
-            if (ibv_post_recv(ctx->qp, &wr, &bad_wr)) {
-                fprintf(stderr, "Function ibv_post_recv failed\n");
-                return 1;
-            }
+        if (ibv_post_recv(ctx->qp, &wr, &bad_wr)) {
+            fprintf(stderr, "Function ibv_post_recv failed\n");
+            return 1;
+        }
+    }
+
+    i = 0;
+    while (i < cnt) {
+        do { ne = ibv_poll_cq(ctx->cq, 1,&wc);}  while (ne == 0);
+        if (ne < 0) {
+            fprintf(stderr, "CQ is in error state");
+            return 1;
         }
 
-        i = 0;
-        while (i < 4) {
-            do { ne = ibv_poll_cq(ctx->cq, 1,&wc);}  while (ne == 0);
-            if (ne < 0) {
-                fprintf(stderr, "CQ is in error state");
-                return 1;
-            }
-
-            if (wc.status) {
-                fprintf(stderr, "Bad completion (status %d)\n",(int)wc.status);
-                return 1;
-            } else {
-                printf("received: %s\n", ctx->mr_buffer + MAX_MSG_SIZE*i +
-                       40);
-            }
-
-            i++;
+        if (wc.status) {
+            fprintf(stderr, "Bad completion (status %d)\n",(int)wc.status);
+            return 1;
+        } else {
+            printf("received: %s\n", ctx->mr_buffer + MAX_MSG_SIZE*i +
+                   40);
         }
-        printf("Press enter to respost\n");
-        getchar();
+
+        i++;
     }
 }
 
