@@ -100,7 +100,7 @@ static int _rc_qp_to_rts(ib_context_t *ctx, int is_send, int max_wr_cnt)
     return 0;
 }
 
-int init_rc_recv(ib_context_t *ctx, settings_t *s)
+int init_rc_recv(ib_context_t *ctx)
 {
     int ret;
 #define MAX_NUM_RECVS 0x10
@@ -108,7 +108,13 @@ int init_rc_recv(ib_context_t *ctx, settings_t *s)
     return ret;
 }
 
-int init_rc_send(ib_context_t *ctx, settings_t *s)
+void free_rc_recv(ib_context_t *ctx)
+{
+    ibv_destroy_qp(ctx->qp);
+    ctx->qp = NULL;
+}
+
+int init_rc_send(ib_context_t *ctx)
 {
     int ret;
 #define MAX_NUM_SENDS 0x10

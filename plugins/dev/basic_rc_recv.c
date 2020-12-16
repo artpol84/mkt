@@ -17,6 +17,7 @@
 #include <infiniband/verbs.h>
 
 #include "basic_ib.h"
+#include "basic_tcp.h"
 #include "basic_rc.h"
 
 int main(int argc, char *argv[]) {
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
     while (1) {
         init_rc_recv(ctx);
         recv_loop(ctx, 1);
+        free_rc_recv(ctx);
     }
     free_ctx(ctx);
     return 0;
