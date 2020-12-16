@@ -130,8 +130,9 @@ struct ibv_ah *get_ah(ib_context_t *ctx)
 int init_ctx(ib_context_t *ctx, settings_t *s)
 {
     int num_devices, ret = -1;
-    ctx->s = s;
+
     memset(ctx, 0, sizeof(*ctx));
+    ctx->s = s;
 
     struct ibv_device **dev_list = ibv_get_device_list(&num_devices);
     if (!dev_list) {
