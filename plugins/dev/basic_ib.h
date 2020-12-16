@@ -12,18 +12,25 @@ typedef struct {
     uint16_t tcp_port;
     char devname[64];
     int  dev_port;
+} settings_t;
+
+typedef struct {
     int  llid;
     int  dlid;
     int  lqpn;
     int  dqpn;
-    union ibv_gid lgid;
-    union ibv_gid dgid;
-} settings_t;
+} ib_address_t;
+
+typedef struct {
+    int listener;
+} tcp_state_t;
 
 #define REGION_SIZE 0x1800
 
 typedef struct {
     settings_t *s;
+    ib_address_t addr;
+    tcp_state_t tcp_state;
     struct ibv_context *ctx;
     struct ibv_device *dev;
     struct ibv_pd *pd;

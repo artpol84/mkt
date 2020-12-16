@@ -17,6 +17,7 @@
 #include <infiniband/verbs.h>
 
 #include "basic_ib.h"
+#include "basic_tcp.h"
 #include "basic_ud.h"
 
 int main(int argc, char *argv[]) {
@@ -27,9 +28,12 @@ int main(int argc, char *argv[]) {
     parse_args(argc, argv, s, 0);
     init_ctx(ctx, s);
     init_ud_recv(ctx);
+    init_tcp_recv(ctx);
 
     while(1) {
-        recv_loop(ctx, 4);
+        /* Wait for connection and exchange IB addressing info */
+        exch_tcp_recv(ctx);
+        recv_loop(ctx, 1);
     }
 
     free_ctx(ctx);

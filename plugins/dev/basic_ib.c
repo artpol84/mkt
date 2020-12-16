@@ -121,7 +121,7 @@ struct ibv_ah *get_ah(ib_context_t *ctx)
     struct ibv_ah_attr ah_attr = { 0 };
     ah_attr.is_global  = 0;
     ah_attr.sl = 0;
-    ah_attr.dlid = ctx->s->dlid;
+    ah_attr.dlid = ctx->addr.dlid;
     ah_attr.port_num = ctx->s->dev_port;
 
     return ibv_create_ah(ctx->pd, &ah_attr);
@@ -166,7 +166,7 @@ int init_ctx(ib_context_t *ctx, settings_t *s)
         goto free_dev_list;
     }
 
-    ctx->s->llid = pattrs.lid;
+    ctx->addr.llid = pattrs.lid;
 
     ctx->pd = ibv_alloc_pd(ctx->ctx);
     if (!ctx->pd) {

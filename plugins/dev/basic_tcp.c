@@ -40,8 +40,8 @@ ssize_t pack_ep(ib_context_t *ctx, char *buf, ssize_t max_len)
     char *ptr = buf;
     ssize_t remain = max_len;
 
-    PACK_ELEM(ptr, remain, &ctx->s->llid, sizeof(ctx->s->llid));
-    PACK_ELEM(ptr, remain, &ctx->s->lqpn, sizeof(ctx->s->lqpn));
+    PACK_ELEM(ptr, remain, &ctx->addr.llid, sizeof(ctx->addr.llid));
+    PACK_ELEM(ptr, remain, &ctx->addr.lqpn, sizeof(ctx->addr.lqpn));
     return max_len - remain;
 }
 
@@ -50,13 +50,13 @@ ssize_t unpack_ep(ib_context_t *ctx, char *buf, ssize_t max_len)
     char *ptr = buf;
     ssize_t remain = max_len;
 
-    UNPACK_ELEM(&ctx->s->dlid, sizeof(ctx->s->dlid), ptr, remain);
-    UNPACK_ELEM(&ctx->s->dqpn, sizeof(ctx->s->dqpn), ptr, remain);
+    UNPACK_ELEM(&ctx->addr.dlid, sizeof(ctx->addr.dlid), ptr, remain);
+    UNPACK_ELEM(&ctx->addr.dqpn, sizeof(ctx->addr.dqpn), ptr, remain);
     return remain;
 }
 
 
-int exchange_send(ib_context_t *ctx)
+int exch_tcp_send(ib_context_t *ctx)
 {
     int sock, n;
     struct sockaddr_in addr;
@@ -113,12 +113,10 @@ int exchange_send(ib_context_t *ctx)
     return 0;
 }
 
-int exchange_recv(ib_context_t *ctx)
+int init_tcp_recv(ib_context_t *ctx)
 {
-    int sock, listener;
+    int listener;
     struct sockaddr_in addr;
-    char message[64];
-    ssize_t len;
 
     listener = socket(AF_INET, SOCK_STREAM, 0);
     if(listener < 0)
@@ -135,10 +133,18 @@ int exchange_recv(ib_context_t *ctx)
         perror("bind");
         exit(2);
     }
+    return 0;
+}
 
-    listen(listener, 1);
+int exch_tcp_recv(ib_context_t *ctx)
+{
+    int sock;
+    char message[64];
+    ssize_t len;
 
-    sock = accept(listener, NULL, NULL);
+    listen(ctx->tcp_state.listener, 1);
+
+    sock = accept(ctx->tcp_state.listener, NULL, NULL);
     if(sock < 0)
     {
         perror("accept");

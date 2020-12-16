@@ -49,7 +49,7 @@ static int _ud_qp_to_rtr(ib_context_t *ctx,
         goto free_qp;
     }
 
-    ctx->s->lqpn = ctx->qp->qp_num;
+    ctx->addr.lqpn = ctx->qp->qp_num;
 
     return 0;
 free_qp:
@@ -62,7 +62,7 @@ int init_ud_recv(ib_context_t *ctx)
     int ret;
 #define MAX_NUM_RECVS 0x10
     ret = _ud_qp_to_rtr(ctx, 0, MAX_NUM_RECVS);
-    exchange_recv(ctx);
+    init_tcp_recv(ctx);
     return ret;
 }
 
@@ -83,7 +83,6 @@ int init_ud_send(ib_context_t *ctx)
         fprintf(stderr, "Failed to modify QP to RTS\n");
         goto free_qp;
     }
-    exchange_send(ctx);
     return 0;
 free_qp:
     ibv_destroy_qp(ctx->qp);
@@ -115,7 +114,7 @@ int send_ud(ib_context_t *ctx, int size)
     wr.next       = NULL;
 
     wr.wr.ud.ah = ah;
-    wr.wr.ud.remote_qpn  = ctx->s->dqpn;
+    wr.wr.ud.remote_qpn  = ctx->addr.dqpn;
     wr.wr.ud.remote_qkey = WELL_KNOWN_QKEY;
 
     ret = send_wr(ctx, &wr);
