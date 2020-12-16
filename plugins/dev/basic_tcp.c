@@ -52,7 +52,7 @@ ssize_t unpack_ep(ib_context_t *ctx, char *buf, ssize_t max_len)
 
     UNPACK_ELEM(&ctx->s->dlid, sizeof(ctx->s->dlid), ptr, remain);
     UNPACK_ELEM(&ctx->s->dqpn, sizeof(ctx->s->dqpn), ptr, remain);
-    return max_len - remain;
+    return remain;
 }
 
 
