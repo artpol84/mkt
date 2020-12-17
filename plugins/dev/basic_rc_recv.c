@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 
     while (1) {
         init_rc_recv(ctx);
-        recv_loop(ctx, 1);
+        recv_loop(ctx, 0, 1);
         free_rc_recv(ctx);
     }
     free_ctx(ctx);

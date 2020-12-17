@@ -46,7 +46,7 @@ int parse_args(int argc, char **argv, settings_t *s, int is_send);
 //int parse_gid(char *gid_str, union ibv_gid *gid);
 int init_ctx(ib_context_t *ctx, settings_t *s);
 void free_ctx(ib_context_t *ctx);
-int recv_loop(ib_context_t *ctx, int cnt);
+int recv_loop(ib_context_t *ctx, int is_ud, int cnt);
 int send_wr(ib_context_t *ctx, struct ibv_send_wr *wr);
 struct ibv_ah *get_ah(ib_context_t *ctx);
 

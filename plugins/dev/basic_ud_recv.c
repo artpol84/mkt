@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     while(1) {
         /* Wait for connection and exchange IB addressing info */
         exch_tcp_recv(ctx);
-        recv_loop(ctx, 1);
+        recv_loop(ctx, 1, 1);
     }
 
     free_ctx(ctx);

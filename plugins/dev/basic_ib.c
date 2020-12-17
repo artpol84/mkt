@@ -219,7 +219,7 @@ void free_ctx(ib_context_t *ctx)
     ibv_close_device(ctx->ctx);
 }
 
-int recv_loop(ib_context_t *ctx, int cnt)
+int recv_loop(ib_context_t *ctx, int is_ud, int cnt)
 {
     struct ibv_recv_wr wr;
     struct ibv_recv_wr *bad_wr;
@@ -258,8 +258,11 @@ int recv_loop(ib_context_t *ctx, int cnt)
             fprintf(stderr, "Bad completion (status %d)\n",(int)wc.status);
             return 1;
         } else {
-            printf("received: %s\n", ctx->mr_buffer + MAX_MSG_SIZE*i +
-                   40);
+            char *ptr = ctx->mr_buffer + MAX_MSG_SIZE*i;
+            if (is_ud) {
+                ptr += 40;
+            }
+            printf("received: %s\n", ptr);
         }
 
         i++;
