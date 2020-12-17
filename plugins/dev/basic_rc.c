@@ -24,6 +24,8 @@ static int _rc_qp_to_rts(ib_context_t *ctx, int is_send, int max_wr_cnt)
         return 1;
     }
 
+    ctx->addr.lqpn = ctx->qp->qp_num;
+
     struct ibv_qp_attr qp_modify_attr = { 0 };
 
     qp_modify_attr.qp_state        = IBV_QPS_INIT;
