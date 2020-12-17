@@ -49,13 +49,13 @@ static int _rc_qp_to_rts(ib_context_t *ctx, int is_send, int max_wr_cnt)
 
     memset(&qp_modify_attr, 0, sizeof(qp_modify_attr));
     qp_modify_attr.qp_state           = IBV_QPS_RTR;
-    qp_modify_attr.path_mtu           = 4096;
+    qp_modify_attr.path_mtu           = ctx->addr.max_mtu;
     qp_modify_attr.dest_qp_num        = ctx->addr.dqpn;
     qp_modify_attr.rq_psn             = 0;
     qp_modify_attr.max_dest_rd_atomic = 1;
     qp_modify_attr.min_rnr_timer      = 12;
-    qp_modify_attr.ah_attr.is_global	= 0;
-    qp_modify_attr.ah_attr.dlid		= ctx->addr.dlid;
+    qp_modify_attr.ah_attr.is_global  = 0;
+    qp_modify_attr.ah_attr.dlid       = ctx->addr.dlid;
     qp_modify_attr.ah_attr.sl         = 0;
     qp_modify_attr.ah_attr.src_path_bits	= 0;
     qp_modify_attr.ah_attr.port_num	= ctx->s->dev_port;

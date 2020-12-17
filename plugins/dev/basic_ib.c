@@ -167,6 +167,7 @@ int init_ctx(ib_context_t *ctx, settings_t *s)
     }
 
     ctx->addr.llid = pattrs.lid;
+    ctx->addr.max_mtu = pattrs.max_mtu;
 
     ctx->pd = ibv_alloc_pd(ctx->ctx);
     if (!ctx->pd) {

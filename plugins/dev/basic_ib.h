@@ -19,6 +19,7 @@ typedef struct {
     int  dlid;
     int  lqpn;
     int  dqpn;
+    enum ibv_mtu max_mtu;
 } ib_address_t;
 
 typedef struct {
